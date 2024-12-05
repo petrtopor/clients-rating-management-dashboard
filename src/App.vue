@@ -1,15 +1,43 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { onMounted } from 'vue'
+import { useUsersStore } from './stores/users'
+
+const usersStore = useUsersStore()
+
+onMounted(() => {
+  usersStore.fetchUsers()
+})
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <h1>Clients Rating Management Dashboard</h1>
 
+      <!-- Show an error message if fetching fails -->
+      <p v-if="usersStore.error">Error: {{ usersStore.error }}</p>
+
+      <!-- Display a loading message if users array is empty and no error -->
+      <p v-else-if="usersStore.users.length === 0">Loading users...</p>
+
+      <!-- Once users are fetched, display them in a list -->
+      <ul v-else>
+        <li
+          v-for="user in usersStore.users"
+          :key="user.id"
+        >
+          <img
+            :src="user.avatar"
+            :alt="`${user.first_name} ${user.last_name}`"
+            width="50"
+            height="50"
+            style="border-radius:50%; margin-right:10px;"
+          />
+          <strong>{{ user.first_name }} {{ user.last_name }}</strong> - {{ user.email }}
+        </li>
+      </ul>
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
