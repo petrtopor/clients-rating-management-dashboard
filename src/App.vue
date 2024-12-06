@@ -23,10 +23,11 @@ onMounted(() => {
       <p v-else-if="usersStore.users.length === 0">Loading users...</p>
 
       <!-- Once users are fetched, display them in a list -->
-      <ul v-else>
+      <ul v-else class="users-list">
         <li
           v-for="user in usersStore.users"
           :key="user.id"
+          class="users-list__item"
         >
           <img
             :src="user.avatar"
@@ -35,7 +36,10 @@ onMounted(() => {
             height="50"
             style="border-radius:50%; margin-right:10px;"
           />
-          <strong>{{ user.first_name }} {{ user.last_name }}</strong> - {{ user.email }}
+
+          <RouterLink :to="`/about/${user.id}`">
+            <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+          </RouterLink>
         </li>
       </ul>
       <nav>
@@ -48,7 +52,23 @@ onMounted(() => {
   <RouterView />
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.users-list {
+  &__item {
+    display: flex;
+    padding: 8px 0;
+
+    img {
+      height: 32px;
+      width: 32px;
+    }
+
+    &:not(:first-child) {
+      border-top: 1px solid gray;
+    }
+  }
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
