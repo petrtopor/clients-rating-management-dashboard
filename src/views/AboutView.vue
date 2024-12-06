@@ -10,10 +10,7 @@
         <div class="user-card__content__details">
           <span class="user-card__content__details__name">{{ userStore?.fullName }}</span>
           <span class="user-card__content__details__email"></span>
-          <div class="user-card__content__details__points">
-            5 points
-            id: {{ userStore.user.id }}
-          </div>
+          <rating-counter class="user-card__content__details__rating-counter" />
           <textarea
             class="user-card__content__details__comment"
             name="comment"
@@ -36,6 +33,7 @@
 <script setup>
 import { defineProps, onMounted, watch } from 'vue'
 import { useUserStore } from '../stores/user'
+import RatingCounter from '../components/RatingCounter.vue'
 
 const props = defineProps({
   userId: {
@@ -89,6 +87,10 @@ watch(() => props.userId, userId => {
       &__email {
         font-size: 24px;
         font-weight: 500;
+      }
+
+      &__rating-counter {
+        margin-bottom: 24px;
       }
     }
   }
