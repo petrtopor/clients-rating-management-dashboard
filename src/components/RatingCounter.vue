@@ -1,17 +1,27 @@
 <template>
   <div class="rating-counter">
     <button class="rating-counter__button" @click="ratingChange(-1)">-</button>
-    <span class="rating-counter__text">{{ rating }}</span>
+    <span class="rating-counter__text">{{ modelValue }}</span>
     <button class="rating-counter__button" @click="ratingChange(1)">+</button>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 
-const rating = ref(5)
+// Props and Emits
+const props = defineProps({
+  modelValue: {
+    type: Number,
+    required: true
+  }
+})
+
+const emit = defineEmits(['update:modelValue'])
+
+// Methods
 const ratingChange = (amount) => {
-  rating.value += amount
+  emit('update:modelValue', props.modelValue + amount)
 }
 </script>
 
@@ -38,6 +48,7 @@ $border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
   }
 
   &__text {

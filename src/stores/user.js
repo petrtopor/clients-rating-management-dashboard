@@ -2,8 +2,10 @@ import { defineStore } from 'pinia'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
-    user: null,
-    error: null
+    user: null, // User data fetched from the API
+    rating: null, // User rating
+    comment: '', // User comment
+    error: null // Error handling
   }),
   actions: {
     async fetchUser(id) {
@@ -15,10 +17,30 @@ export const useUserStore = defineStore('user', {
         }
         const data = await response.json()
         this.user = data.data ?? null
+
+        // Load rating and comment from localStorage if they exist
+        const localData = JSON.parse(localStorage.getItem(`user_${id}`))
+        if (localData) {
+          this.rating = localData.rating
+          this.comment = localData.comment
+        } else {
+          this.rating = 5
+          this.comment = ''
+        }
       } catch (err) {
         console.error(err)
         this.error = err.message
       }
+    },
+    saveUserData(id, rating, comment) {
+      // Persist rating and comment to localStorage
+      localStorage.setItem(
+        `user_${id}`,
+        JSON.stringify({
+          rating: rating,
+          comment: comment
+        })
+      )
     }
   },
   getters: {

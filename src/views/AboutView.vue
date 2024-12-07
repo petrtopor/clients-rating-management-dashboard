@@ -10,19 +10,21 @@
         <div class="user-card__content__details">
           <span class="user-card__content__details__name">{{ userStore?.fullName }}</span>
           <span class="user-card__content__details__email"></span>
-          <rating-counter class="user-card__content__details__rating-counter" />
+          <rating-counter
+            class="user-card__content__details__rating-counter"
+            v-model="rating"
+          />
           <textarea
             class="user-card__content__details__comment"
             name="comment"
             id="comment"
             cols="30"
             rows="5"
-          >
-            Call on tuesday
-          </textarea>
+            v-model="comment"
+          />
         </div>
       </div>
-      <button class="user-card__button">
+      <button class="user-card__button" @click="onSubmitClick">
         Save
       </button>
     </div>
@@ -31,7 +33,7 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, watch } from 'vue'
+import { defineProps, onMounted, watch, ref } from 'vue'
 import { useUserStore } from '../stores/user'
 import RatingCounter from '../components/RatingCounter.vue'
 
@@ -48,8 +50,17 @@ onMounted(() => {
   userStore.fetchUser(props.userId)
 })
 
-watch(() => props.userId, userId => {
-  userStore.fetchUser(props.userId)
+const rating = ref(userStore.rating)
+const comment = ref(userStore.comment)
+
+const onSubmitClick = async () => {
+  userStore.saveUserData(props.userId, rating.value, comment.value)
+}
+
+watch(() => props.userId, async () => {
+  await userStore.fetchUser(props.userId)
+  rating.value = userStore.rating
+  comment.value = userStore.comment
 })
 </script>
 
