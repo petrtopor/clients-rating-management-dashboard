@@ -27,11 +27,31 @@ export const useUsersStore = defineStore('users', {
         this.per_page = data.per_page ?? null
         this.total = data.total ?? null
         this.total_pages = data.total_pages ?? null
-        this.users = Array.isArray(data.data) ? [...data.data] : []
+
+        this.users = Array.isArray(data.data) ?
+          [...data.data.map(user => {
+            const localData = JSON.parse(localStorage.getItem(`user_${user.id}`))
+
+            return {
+              ...user,
+              rating: localData?.rating ?? 0,
+              comment: localData?.comment ?? ''
+            }
+          })] :
+          []
         this.support = data.support ?? null
       } catch (error) {
         console.error('Error fetching users:', error)
         this.error = error.message
+      }
+    },
+    setUser(id, user) {
+      console.log(`setUser(id: ${id})`)
+      const userIndex = this.users.findIndex(user => user.id === id)
+      // const user = this.users[userIndex]
+      this.users[userIndex] = {
+        ...this.users[userIndex],
+        ...user
       }
     }
   },
@@ -39,6 +59,9 @@ export const useUsersStore = defineStore('users', {
     // Example: Sorted users by last_name for convenience
     sortedUsersByLastName: (state) => {
       return [...state.users].sort((a, b) => a.last_name.localeCompare(b.last_name))
+    },
+    sortedUsersByRating: (state) => {
+      return [...state.users].sort((a, b) => b.rating - a.rating)
     }
   }
 })
