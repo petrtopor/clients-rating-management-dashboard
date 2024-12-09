@@ -46,9 +46,7 @@ export const useUsersStore = defineStore('users', {
       }
     },
     setUser(id, user) {
-      console.log(`setUser(id: ${id})`)
-      const userIndex = this.users.findIndex(user => user.id === id)
-      // const user = this.users[userIndex]
+      const userIndex = this.users.findIndex(user => user.id === Number(id))
       this.users[userIndex] = {
         ...this.users[userIndex],
         ...user

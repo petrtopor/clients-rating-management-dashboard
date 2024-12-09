@@ -34,7 +34,6 @@ export const useUserStore = defineStore('user', {
       }
     },
     saveUserData(id, rating, comment) {
-      console.log(`saveUserData(id: ${id}, rating: ${rating}, comment: ${comment})`)
       const usersStore = useUsersStore()
       // Persist rating and comment to localStorage
       localStorage.setItem(
