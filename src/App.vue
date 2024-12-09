@@ -2,12 +2,17 @@
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import SortingSwitcher from './components/SortingSwitcher.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { useUsersStore } from './stores/users'
 
 const usersStore = useUsersStore()
 
 const sorting = ref("clients")
+const usersLists = computed(() => ({
+  clients: usersStore.sortedUsersByLastName,
+  rating: usersStore.sortedUsersByRating
+}))
+const sortedUsersList = computed(() => usersLists.value[sorting.value])
 
 onMounted(() => {
   usersStore.fetchUsers()
@@ -30,7 +35,7 @@ onMounted(() => {
       <!-- Once users are fetched, display them in a list -->
       <ul v-else class="users-list">
         <li
-          v-for="user in usersStore.users"
+          v-for="user in sortedUsersList"
           :key="user.id"
           class="users-list__item"
         >
@@ -42,7 +47,7 @@ onMounted(() => {
             style="border-radius:50%; margin-right:10px;"
           />
           <span>
-            {{ JSON.parse(localStorage.getItem(`user_${user.id}`)) }}
+            {{ user.rating }}
           </span>
 
           <RouterLink :to="`/about/${user.id}`">

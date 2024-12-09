@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useUsersStore } from './users'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -33,6 +34,7 @@ export const useUserStore = defineStore('user', {
       }
     },
     saveUserData(id, rating, comment) {
+      const usersStore = useUsersStore()
       // Persist rating and comment to localStorage
       localStorage.setItem(
         `user_${id}`,
@@ -41,6 +43,10 @@ export const useUserStore = defineStore('user', {
           comment: comment
         })
       )
+      usersStore.setUser(id, {
+        rating,
+        comment
+      })
     }
   },
   getters: {

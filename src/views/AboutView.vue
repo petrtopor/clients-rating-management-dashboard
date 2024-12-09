@@ -46,8 +46,10 @@ const props = defineProps({
 
 const userStore = useUserStore()
 
-onMounted(() => {
-  userStore.fetchUser(props.userId)
+onMounted(async () => {
+  await userStore.fetchUser(props.userId)
+  rating.value = userStore.rating
+  comment.value = userStore.comment
 })
 
 const rating = ref(userStore.rating)
