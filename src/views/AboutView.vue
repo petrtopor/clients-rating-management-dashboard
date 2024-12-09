@@ -72,20 +72,31 @@ watch(() => props.userId, async () => {
     min-height: 100vh;
     display: flex;
     align-items: center;
+    justify-content: space-around;
+    background-color: #e1e1e1;
   }
 }
 
 .user-card {
+  background-color: white;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  border-radius: 8px;
+
+  padding: 16px;
 
   &__content {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 
     &__avatar {
-      height: 64px;
-      width: 64px;
+      height: 128px;
+      width: 128px;
+      border-radius: 8px;
+      margin-right: 16px;
     }
 
     &__details {
@@ -102,15 +113,17 @@ watch(() => props.userId, async () => {
         font-weight: 500;
       }
 
-      &__rating-counter {
-        margin-bottom: 24px;
+      &__comment {
+        margin-top: 16px;
       }
     }
   }
 
   &__button {
     color: white;
-    background-color: blue;
+    background-color: #027bff;
+    border: none;
+    border-radius: 2px;
     width: 128px;
     height: 24px;
   }
