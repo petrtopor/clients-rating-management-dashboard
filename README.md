@@ -2,6 +2,10 @@
 
 This template should help get you started developing with Vue 3 in Vite.
 
+## GH-Deployment for a preview
+
+See [deployed preview]([https://vite.dev/config/](https://petrtopor.github.io/clients-rating-management-dashboard/)).
+
 ## Recommended IDE Setup
 
 [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
