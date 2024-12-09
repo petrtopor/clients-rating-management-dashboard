@@ -50,13 +50,14 @@ onMounted(() => {
           :class="{ 'users-list__item--active': Number(route.params.userId) === user.id }"
         >
           <img
+            v-if="sorting === 'clients'"
             :src="user.avatar"
             :alt="`${user.first_name} ${user.last_name}`"
             width="50"
             height="50"
             style="border-radius:50%; margin-right:10px;"
           />
-          <span>
+          <span v-else class="users-list__item__rating">
             {{ user.rating }}
           </span>
 
@@ -83,6 +84,7 @@ $width-diff: 77px;
 
   &__item {
     display: flex;
+    align-items: center;
     padding: 8px 0;
 
     &--active {
@@ -96,6 +98,11 @@ $width-diff: 77px;
 
     &:not(:first-child) {
       border-top: 1px solid #ddd;
+    }
+
+    &__rating {
+      font-size: 36px;
+      font-weight: 700;
     }
   }
 }
