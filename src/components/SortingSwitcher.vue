@@ -46,7 +46,7 @@ $border-radius: 4px;
   width: 100%;
   display: flex;
   height: $height;
-  background-color: #d4e0ea;
+  background-color: #e3f2fd;
   border-radius: $border-radius;
   padding: $padding;
 

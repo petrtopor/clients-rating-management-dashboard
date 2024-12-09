@@ -3,11 +3,16 @@ import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import SortingSwitcher from './components/SortingSwitcher.vue'
 import { onMounted, ref, computed } from 'vue'
+import { useRoute } from 'vue-router'
 import { useUsersStore } from './stores/users'
 
 const usersStore = useUsersStore()
 
+const route = useRoute()
+
 const sorting = ref("clients")
+const isWrapperCollapsed = ref(false)
+
 const usersLists = computed(() => ({
   clients: usersStore.sortedUsersByLastName,
   rating: usersStore.sortedUsersByRating
@@ -20,10 +25,14 @@ onMounted(() => {
 </script>
 
 <template>
-  <header>
+  <header :class="{ '--collapsed': isWrapperCollapsed }">
+    <div
+      class="collapse-button"
+      @click="isWrapperCollapsed = !isWrapperCollapsed"
+    >
+      {{ isWrapperCollapsed ? '>' : '<' }}
+    </div>
     <div class="wrapper">
-      <h1>Clients Rating Management Dashboard</h1>
-
       <sorting-switcher v-model="sorting" />
 
       <!-- Show an error message if fetching fails -->
@@ -38,6 +47,7 @@ onMounted(() => {
           v-for="user in sortedUsersList"
           :key="user.id"
           class="users-list__item"
+          :class="{ 'users-list__item--active': Number(route.params.userId) === user.id }"
         >
           <img
             :src="user.avatar"
@@ -55,10 +65,6 @@ onMounted(() => {
           </RouterLink>
         </li>
       </ul>
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
     </div>
   </header>
 
@@ -66,10 +72,22 @@ onMounted(() => {
 </template>
 
 <style scoped lang="scss">
+$header-width: 270px;
+$collapsed-width: 0px;
+$transition-duration: 0.3s;
+$width-diff: 77px;
+
 .users-list {
+  width: 100%;
+  padding: 0;
+
   &__item {
     display: flex;
     padding: 8px 0;
+
+    &--active {
+      background-color: #ddd;
+    }
 
     img {
       height: 32px;
@@ -77,7 +95,7 @@ onMounted(() => {
     }
 
     &:not(:first-child) {
-      border-top: 1px solid gray;
+      border-top: 1px solid #ddd;
     }
   }
 }
@@ -85,6 +103,42 @@ onMounted(() => {
 header {
   line-height: 1.5;
   max-height: 100vh;
+  width: calc($header-width + $width-diff);
+  position: relative;
+
+  transition: width $transition-duration ease-in-out;
+
+  .collapse-button {
+    height: 32px;
+    width: 16px;
+    background-color: #e3f2fd;
+    align-content: center;
+    cursor: pointer;
+    color: #257dca;
+    font-weight: 700;
+
+    position: absolute;
+    left: $header-width;
+  }
+
+  &.--collapsed {
+    width: $collapsed-width;
+
+    .collapse-button {
+      left: $collapsed-width;
+    }
+
+    .wrapper {
+      display: none;
+    }
+  }
+
+  .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+  }
 }
 
 .logo {
@@ -120,18 +174,11 @@ nav a:first-of-type {
 @media (min-width: 1024px) {
   header {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    place-items: flex-start;
   }
 
   .logo {
     margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
   }
 
   nav {
